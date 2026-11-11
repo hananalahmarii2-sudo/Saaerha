@@ -50,7 +50,7 @@
             padding: 20px;
             width: 100%;
             max-width: 450px;
-            padding-bottom: 130px;
+            padding-bottom: 140px;
         }
 
         .app-logo-badge {
@@ -111,16 +111,16 @@
             font-size: 13px;
         }
 
-        /* صندوق خيارات الاستلام وتوصيل العنوان الواضح */
+        /* صندوق خيارات الاستلام والتوصيل والعنوان البارز */
         .order-options-box {
             width: 100%;
             background: #fff;
             padding: 16px;
             border-radius: 14px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             margin-top: 15px;
             text-align: right;
-            border: 1px solid #eee;
+            border: 2px solid #ffedd5;
         }
         .order-options-box label {
             font-size: 13px;
@@ -132,11 +132,11 @@
         .type-selector {
             display: flex;
             gap: 10px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .type-btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: 2px solid #eee;
             background: #fdfdfd;
             border-radius: 8px;
@@ -153,19 +153,20 @@
         }
         .location-input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            border: 2px solid #fed7aa;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             outline: none;
             text-align: right;
-            margin-top: 6px;
+            background-color: #fffaf5;
         }
         .location-input:focus {
             border-color: #f97316;
+            background-color: #fff;
         }
 
-        /* شريط السلة السفلي */
+        /* شريط السلة والسفلي */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -217,10 +218,10 @@
 
         <!-- قائمة المنتجات -->
         <div id="products-container" style="width: 100%;">
-            <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة من قوقل شيت...</div>
+            <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
         </div>
 
-        <!-- خيارات طريقة الاستلام وعنوان التوصيل البارز -->
+        <!-- صندوق خيارات الاستلام وعنوان التوصيل البارز -->
         <div class="order-options-box">
             <label>طريقة الاستلام:</label>
             <div class="type-selector">
@@ -228,10 +229,8 @@
                 <button type="button" class="type-btn" id="btn-delivery" onclick="setOrderType('توصيل')">🚗 توصيل</button>
             </div>
             
-            <div>
-                <label>عنوان / موقع التوصيل:</label>
-                <input type="text" id="user-location" class="location-input" placeholder="اكتبي الحي أو الشارع أو أرفقي موقعك هنا (اختياري)...">
-            </div>
+            <label style="color: #f97316;">📍 عنوان / موقع التوصيل:</label>
+            <input type="text" id="user-location" class="location-input" placeholder="اكتبي الحي، الشارع، أو أرفقي رابط موقعك هنا...">
         </div>
     </div>
 
@@ -256,12 +255,7 @@
 
         async function loadSheetData() {
             try {
-                const response = await fetch(SHEET_URL);
-                const rows = await response.json();
-                
                 const container = document.getElementById('products-container');
-                container.innerHTML = '';
-
                 const items = [
                     { name: "كرواسون", price: 12 },
                     { name: "قهوة", price: 6 },
@@ -284,7 +278,6 @@
                 container.innerHTML = html;
             } catch (error) {
                 console.error(error);
-                document.getElementById('products-container').innerHTML = '<div style="color:red; text-align:center;">تعذر جلب البيانات من الشيت</div>';
             }
         }
 
