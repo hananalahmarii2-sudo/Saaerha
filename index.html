@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سعرها - بالسعر الأصلي</title>
-    
-    <!-- Tailwind CSS للتصميم -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
     <!-- إعدادات الـ PWA والتغليف -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
@@ -17,199 +13,129 @@
     <meta name="apple-mobile-web-app-title" content="سعرها">
     
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #fdfdfd;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        /* 1️⃣ شريط الإشعار العلوي الصغير */
+        #app-install-banner {
+            width: 100%;
+            background-color: #f97316;
+            color: #ffffff;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+        }
+
+        #app-install-banner .banner-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #app-install-banner button.btn-close {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.8;
+            padding: 0 4px;
+        }
+
+        /* 2️⃣ باقي محتوى الصفحة */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .logo-container img {
+            width: 130px;
+            height: 130px;
+            object-fit: contain;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.2);
+        }
+
+        h1 {
+            color: #f97316;
+            font-size: 28px;
+            margin: 12px 0 4px;
+        }
+
+        p.slogan {
+            color: #666;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .content-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            max-width: 90%;
+            width: 380px;
+            border: 1px solid #f0f0f0;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 pb-20">
+<body>
 
-    <!-- 1️⃣ شريط الإشعار العلوي لتثبيت التطبيق (يظهر فوق في البداية) -->
-    <div id="pwa-app-banner" class="bg-orange-500 text-white px-4 py-2.5 shadow-md flex items-center justify-between sticky top-0 z-50 text-xs sm:text-sm">
-        <div class="flex items-center space-x-2 space-x-reverse">
-            <div class="bg-white p-1 rounded-lg text-orange-500">
-                <i class="fa-solid fa-mobile-screen-button text-base"></i>
-            </div>
-            <div>
-                <span class="font-bold block">تطبيق سعرها</span>
-                <span class="text-orange-100 text-[11px]">ثبّته على شاشة جوالك لطلب أسرع!</span>
-            </div>
+    <!-- الإشعار العلوي الصغير للتحميل -->
+    <div id="app-install-banner">
+        <div class="banner-text">
+            <span>📲 لتثبيت التطبيق: اضغط <b>مشاركة (Share)</b> ثم <b>إضافة للشاشة الرئيسية</b></span>
         </div>
-        <div class="flex items-center space-x-2 space-x-reverse">
-            <button onclick="installApp()" class="bg-white text-orange-600 font-bold px-3 py-1 rounded-full shadow hover:bg-orange-50 transition text-xs">
-                تثبيت
-            </button>
-            <button onclick="document.getElementById('pwa-app-banner').remove()" class="text-orange-200 hover:text-white px-1">
-                <i class="fa-solid fa-xmark text-sm"></i>
-            </button>
+        <button class="btn-close" onclick="document.getElementById('app-install-banner').style.display='none'">✕</button>
+    </div>
+
+    <!-- محتوى التطبيق الرئيسي -->
+    <div class="main-content">
+        <div class="logo-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/1069/1069102.png" alt="شعار سعرها">
+        </div>
+
+        <h1>سعرها</h1>
+        <p class="slogan">بالسعر الأصلي</p>
+
+        <div class="content-box">
+            <p>مرحباً بكِ في تطبيق <strong>سعرها</strong> لمقارنة الأسعار والطلب بالسعر الأصلي!</p>
         </div>
     </div>
 
-    <!-- 2️⃣ الهيدر الرئيسي للموقع -->
-    <header class="bg-white border-b border-gray-100 sticky top-[45px] z-40 shadow-sm">
-        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
-                    س
-                </div>
-                <div>
-                    <h1 class="font-black text-gray-900 text-lg leading-tight">سعرها</h1>
-                    <p class="text-xs text-orange-500 font-bold">بالسعر الأصلي 🏷️</p>
-                </div>
-            </div>
-            <div class="relative">
-                <button onclick="toggleCart()" class="bg-orange-50 text-orange-600 p-2.5 rounded-xl font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-basket-shopping text-lg"></i>
-                    <span id="cart-count" class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full">0</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 3️⃣ محتوى الوجبات والطلب -->
-    <main class="max-w-md mx-auto px-4 pt-4">
-        <!-- شريط البحث والتصنيفات -->
-        <div class="mb-4">
-            <input type="text" id="search-input" onkeyup="filterItems()" placeholder="ابحث عن وجبة أو مشروب..." class="w-full bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-500 shadow-sm">
-        </div>
-
-        <!-- قائمة المنتجات -->
-        <div id="products-list" class="grid grid-cols-1 gap-3">
-            <div class="text-center py-8 text-gray-400">جاري تحميل القائمة...</div>
-        </div>
-    </main>
-
-    <!-- 4️⃣ السلة النافذة السفلية للطلب عبر واتساب -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end justify-center">
-        <div class="bg-white w-full max-w-md rounded-t-2xl p-4 max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 border-b pb-2">
-                <h3 class="font-bold text-lg">سلة الطلبات</h3>
-                <button onclick="toggleCart()" class="text-gray-400 text-xl">&times;</button>
-            </div>
-            <div id="cart-items" class="space-y-2 mb-4 text-sm"></div>
-            <div class="border-t pt-3 flex justify-between font-bold text-base mb-4">
-                <span>المجموع:</span>
-                <span id="cart-total" class="text-orange-600">0 ر.س</span>
-            </div>
-            <button onclick="sendToWhatsApp()" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:bg-green-600">
-                <i class="fa-brands fa-whatsapp text-xl"></i>
-                إرسال الطلب عبر الواتساب
-            </button>
-        </div>
-    </div>
-
-    <!-- 5️⃣ البرمجية الخاصة بالجداول وتثبيت التطبيق والطلب -->
     <script>
-        // ضع رابط Google Sheets الخاص بكِ هنا (JSON format أو السكربت)
-        const SHEET_URL = 'https://opensheet.elk.sh/YOUR_SHEET_ID/Sheet1';
-
-        let products = [];
-        let cart = [];
-        let deferredPrompt;
-
-        // التقاط حدث تثبيت التطبيق للجوال
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            document.getElementById('pwa-app-banner').style.display = 'flex';
-        });
-
-        function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        document.getElementById('pwa-app-banner').style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                alert('لتثبيت التطبيق: اضغط زر "مشاركة" في متصفحك ثم اختر "إضافة إلى الشاشة الرئيسية" 📲');
-            }
+      // اخفاء شريط الإشعار العلوي إذا كان المستخدم فتح التطبيق بعد تثبيته بالفعل
+      window.addEventListener('DOMContentLoaded', () => {
+        const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+        if (isStandalone) {
+          const banner = document.getElementById('app-install-banner');
+          if (banner) banner.style.display = 'none';
         }
-
-        // جلب البيانات واستعراض الوجبات
-        async function fetchProducts() {
-            try {
-                // بيانات تجريبية إذا لم يتوفر رابط الشيت فوراً
-                products = [
-                    { id: 1, name: 'برجر دجاج كلاسيك', price: 18, category: 'وجبات', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200' },
-                    { id: 2, name: 'بطاطس مقرمشة', price: 7, category: 'جوانب', image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=200' },
-                    { id: 3, name: 'عصير برتقال طازج', price: 10, category: 'مشروبات', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=200' }
-                ];
-                renderProducts(products);
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        function renderProducts(items) {
-            const container = document.getElementById('products-list');
-            container.innerHTML = items.map(item => `
-                <div class="bg-white p-3 rounded-xl border border-gray-100 flex items-center justify-between shadow-sm">
-                    <div class="flex items-center space-x-3 space-x-reverse">
-                        <img src="${item.image}" class="w-16 h-16 rounded-lg object-cover" alt="${item.name}">
-                        <div>
-                            <h4 class="font-bold text-gray-800 text-sm">${item.name}</h4>
-                            <p class="text-orange-600 font-bold text-xs mt-1">${item.price} ر.س <span class="text-[10px] text-gray-400 font-normal">(بالسعر الأصلي)</span></p>
-                        </div>
-                    </div>
-                    <button onclick="addToCart(${item.id})" class="bg-orange-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold shadow hover:bg-orange-600">
-                        +
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function addToCart(id) {
-            const item = products.find(p => p.id === id);
-            cart.push(item);
-            updateCart();
-        }
-
-        function updateCart() {
-            document.getElementById('cart-count').innerText = cart.length;
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cart-total').innerText = total + ' ر.س';
-            
-            const cartContainer = document.getElementById('cart-items');
-            cartContainer.innerHTML = cart.map((item, index) => `
-                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                    <span>${item.name}</span>
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-orange-600">${item.price} ر.س</span>
-                        <button onclick="removeFromCart(${index})" class="text-red-500 text-xs">حذف</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCart();
-        }
-
-        function toggleCart() {
-            document.getElementById('cart-modal').classList.toggle('hidden');
-        }
-
-        function filterItems() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = products.filter(p => p.name.toLowerCase().includes(query));
-            renderProducts(filtered);
-        }
-
-        function sendToWhatsApp() {
-            if (cart.length === 0) return alert('السلة فارغة!');
-            let message = "مرحباً، أرغب بطلب الآتي من تطبيق سعرها:\n\n";
-            cart.forEach((item, i) => {
-                message += `${i+1}. ${item.name} - ${item.price} ر.س\n`;
-            });
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            message += `\nالمجموع الكلي: ${total} ر.س`;
-            
-            window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-        }
-
-        fetchProducts();
+      });
     </script>
 </body>
 </html>
