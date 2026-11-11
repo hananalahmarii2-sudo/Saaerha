@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سعرها - بالسعر الأصلي</title>
 
-    <!-- إعدادات الـ PWA والتغليف -->
+    <!-- إعدادات التغليف (PWA) والهوية -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -161,7 +161,7 @@
         <p class="slogan">بالسعر الأصلي</p>
 
         <div class="products-grid" id="products-list">
-            <div style="color:#888; padding: 20px;">جاري جلب الوجبات والأسعار من قوقل شيت...</div>
+            <!-- سيتم تعبئة المنتجات تلقائياً من الكود أدناه -->
         </div>
     </div>
 
@@ -177,53 +177,36 @@
     </div>
 
     <script>
-        // رابط API قوقل شيت المباشر الخاص بمستندك
-        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
-        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/الورقة1`;
+        // بيانات جدولك (مطابق لما في قوقل شيت تماماً)
+        const storeData = {
+            name: "مخابز زين",
+            number: "966502400234",
+            items: [
+                { name: "كرواسون", price: 12 },
+                { name: "قهوة", price: 6 },
+                { name: "ماكرون", price: 6 }
+            ]
+        };
 
         let cart = [];
-        let storeNumber = ""; // سيتم تعبئته تلقائياً من قوقل شيت
 
-        async function fetchProductsFromSheet() {
-            try {
-                const response = await fetch(SHEET_URL);
-                const data = await response.json();
-                
-                const container = document.getElementById('products-list');
-                container.innerHTML = '';
+        function renderStore() {
+            const container = document.getElementById('products-list');
+            let html = `<div class="store-title">🏪 ${storeData.name}</div>`;
 
-                data.forEach(row => {
-                    if (!row.name) return;
-                    
-                    // حفظ رقم الواتساب (إضافة المفتاح الدولي بالسعودية 966 إذا كان الرقم يبدأ بـ 5)
-                    let num = (row.number || '').toString().trim();
-                    if (num.startsWith('5')) num = '966' + num;
-                    storeNumber = num;
+            storeData.items.forEach((item) => {
+                html += `
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">${item.name}</div>
+                            <div class="product-price">${item.price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
+                        </div>
+                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة +</button>
+                    </div>
+                `;
+            });
 
-                    const categories = (row.category || '').split(',').map(s => s.trim());
-                    const prices = (row.price || '').split(',').map(s => s.trim());
-
-                    let html = `<div class="store-title">🏪 ${row.name}</div>`;
-
-                    categories.forEach((item, index) => {
-                        const price = prices[index] || prices[0] || '0';
-                        html += `
-                            <div class="product-card">
-                                <div class="product-info">
-                                    <div class="product-name">${item}</div>
-                                    <div class="product-price">${price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
-                                </div>
-                                <button class="add-btn" onclick="addToCart('${item}', ${parseFloat(price)})">إضافة +</button>
-                            </div>
-                        `;
-                    });
-
-                    container.innerHTML += html;
-                });
-            } catch (err) {
-                console.error(err);
-                document.getElementById('products-list').innerHTML = '<div style="color:red;">حدث خطأ في تحميل البيانات من قوقل شيت.</div>';
-            }
+            container.innerHTML = html;
         }
 
         function addToCart(name, price) {
@@ -243,11 +226,6 @@
                 return;
             }
 
-            if (!storeNumber) {
-                alert('لم يتم العثور على رقم الواتساب للمتجر في قوقل شيت!');
-                return;
-            }
-
             let message = "مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n";
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - ${item.price} ر.س\n`;
@@ -255,12 +233,12 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             message += `\nالمجموع الكلي: ${total} ر.س`;
 
-            let url = `https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`;
+            let url = `https://wa.me/${storeData.number}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
 
-        // تشغيل جلب البيانات فور تحميل الصفحة
-        fetchProductsFromSheet();
+        // تشغيل عرض البيانات فور تحميل الصفحة
+        renderStore();
 
         // إخفاء التنبيه إذا كان التطبيق مثبتاً ومفتوحاً كـ PWA
         window.addEventListener('DOMContentLoaded', () => {
