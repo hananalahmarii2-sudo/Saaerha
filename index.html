@@ -68,16 +68,18 @@
         <p style="font-size: 14px; color: #888;">الموقع جاهز الآن ليعمل كتطبيق مستقل على جوالكِ.</p>
     </div>
 
-    <!-- كود إشعار وتنبيه التثبيت للشاشة الرئيسية في الجوال -->
+    <!-- كود إشعار علوي (Top Notification) لطريقة التثبيت -->
     <script>
       window.addEventListener('DOMContentLoaded', () => {
         const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
 
         if (!isStandalone) {
-          const banner = document.createElement('div');
-          banner.style.cssText = 'position:fixed; bottom:15px; left:15px; right:15px; background:#111; color:#fff; padding:12px 16px; border-radius:12px; text-align:center; z-index:99999; font-size:13px; box-shadow:0 4px 15px rgba(0,0,0,0.4); font-family:sans-serif; line-height:1.5;';
-          banner.innerHTML = '📲 لتثبيت تطبيق <b>سعرها</b> على شاشتك الرئيسية:<br>اضغط زر <b>مشاركة (Share)</b> ثم <b>إضافة إلى الشاشة الرئيسية (Add to Home Screen)</b> <span style="display:block; margin-top:6px; font-size:11px; color:#aaa; cursor:pointer;" onclick="this.parentNode.style.display=\'none\'">إخفاء</span>';
-          document.body.appendChild(banner);
+          const topNotification = document.createElement('div');
+          topNotification.style.cssText = 'position:fixed; top:15px; left:15px; right:15px; background:#f97316; color:#fff; padding:14px 18px; border-radius:14px; text-align:center; z-index:99999; font-size:13px; box-shadow:0 6px 20px rgba(249,115,22,0.35); font-family:sans-serif; line-height:1.6; animation: slideDown 0.5s ease;';
+          
+          topNotification.innerHTML = '📲 <b>تثبيت تطبيق "سعرها":</b> اضغط على زر <b>مشاركة (Share)</b> في المتصفح، ثم اختر <b>إضافة إلى الشاشة الرئيسية (Add to Home Screen)</b><div style="margin-top:6px; font-size:11px; background:rgba(0,0,0,0.15); display:inline-block; padding:2px 10px; border-radius:6px; cursor:pointer;" onclick="this.parentNode.style.display=\'none\'">إخفاء الإشعار</div>';
+          
+          document.body.appendChild(topNotification);
         }
       });
     </script>
