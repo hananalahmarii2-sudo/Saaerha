@@ -50,10 +50,10 @@
             padding: 20px;
             width: 100%;
             max-width: 450px;
-            padding-bottom: 90px;
+            padding-bottom: 120px;
         }
 
-        /* اللوقو الأصيل المستوحى من فكرة بطاقة السعر والتوفير */
+        /* اللوقو المستوحى من فكرة التطبيق */
         .app-logo-badge {
             width: 110px;
             height: 110px;
@@ -72,7 +72,7 @@
         .app-logo-badge .logo-text { font-size: 16px; font-weight: 900; letter-spacing: -0.5px; }
 
         h1 { color: #f97316; font-size: 26px; margin: 12px 0 4px; }
-        p.slogan { color: #666; font-size: 14px; font-weight: bold; margin-bottom: 24px; }
+        p.slogan { color: #666; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
 
         .store-title {
             width: 100%;
@@ -112,6 +112,61 @@
             font-size: 13px;
         }
 
+        /* قسم خيارات الاستلام والتوصيل والموقع */
+        .order-options-box {
+            width: 100%;
+            background: #fff;
+            padding: 16px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            margin-top: 15px;
+            text-align: right;
+            border: 1px solid #eee;
+        }
+        .order-options-box label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .type-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #eee;
+            background: #fdfdfd;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #666;
+            text-align: center;
+        }
+        .type-btn.active {
+            border-color: #f97316;
+            background: #fff7ed;
+            color: #f97316;
+        }
+        .location-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            text-align: right;
+            display: none; /* يظهر فقط عند اختيار توصيل */
+        }
+        .location-input:focus {
+            border-color: #f97316;
+        }
+
+        /* شريط السلة السفلي */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -152,7 +207,7 @@
     </div>
 
     <div class="main-content">
-        <!-- اللوقو المستوحى من فكرة بطاقة السعر -->
+        <!-- اللوقو -->
         <div class="app-logo-badge">
             <div class="tag-icon">🏷️</div>
             <div class="logo-text">سعرها</div>
@@ -163,6 +218,20 @@
 
         <div id="products-container" style="width: 100%;">
             <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
+        </div>
+
+        <!-- خيارات طريقة الاستلام والموقع -->
+        <div class="order-options-box">
+            <label>طريقة الاستلام:</label>
+            <div class="type-selector">
+                <button type="button" class="type-btn active" id="btn-pickup" onclick="setOrderType('استلام من المتجر')">🛍️ استلام من المتجر</button>
+                <button type="button" class="type-btn" id="btn-delivery" onclick="setOrderType('توصيل')">🚗 توصيل</button>
+            </div>
+            
+            <div id="location-wrapper" style="display: none;">
+                <label>عنوان / موقع التوصيل:</label>
+                <input type="text" id="user-location" class="location-input" placeholder="اكتبي الحي أو الشارع أو أرفقي رابط الموقع...">
+            </div>
         </div>
     </div>
 
@@ -177,13 +246,11 @@
     </div>
 
     <script>
-        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
-        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/1`;
-
         let cart = [];
         let storeNumber = "966502400234";
+        let orderType = "استلام من المتجر"; // القيمة الافتراضية
 
-        async function loadData() {
+        function loadData() {
             const container = document.getElementById('products-container');
             const items = [
                 { name: "كرواسون", price: 12 },
@@ -207,6 +274,23 @@
             container.innerHTML = html;
         }
 
+        function setOrderType(type) {
+            orderType = type;
+            const btnPickup = document.getElementById('btn-pickup');
+            const btnDelivery = document.getElementById('btn-delivery');
+            const locationWrapper = document.getElementById('location-wrapper');
+
+            if (type === 'استلام من المتجر') {
+                btnPickup.classList.add('active');
+                btnDelivery.classList.remove('active');
+                locationWrapper.style.display = 'none';
+            } else {
+                btnDelivery.classList.add('active');
+                btnPickup.classList.remove('active');
+                locationWrapper.style.display = 'block';
+            }
+        }
+
         function addToCart(name, price) {
             cart.push({ name, price });
             updateCartUI();
@@ -223,13 +307,25 @@
                 alert('الرجاء اختيار وجبة واحدة على الأقل قبل الإرسال!');
                 return;
             }
-            
-            let message = "مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n";
+
+            let locationText = document.getElementById('user-location').value.trim();
+            if (orderType === 'توصيل' && !locationText) {
+                alert('الرجاء كتابة موقع أو عنوان التوصيل!');
+                return;
+            }
+
+            let message = `مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n`;
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - ${item.price} ر.س\n`;
             });
+            
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             message += `\nالمجموع الكلي: ${total} ر.س`;
+            message += `\n\n📍 طريقة الاستلام: ${orderType}`;
+            
+            if (orderType === 'توصيل') {
+                message += `\n🏠 موقع التوصيل: ${locationText}`;
+            }
 
             let url = `https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
