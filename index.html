@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>سعرها - بالسعر الأصلي</title>
 
     <link rel="manifest" href="manifest.json">
@@ -50,7 +50,7 @@
             padding: 20px;
             width: 100%;
             max-width: 450px;
-            padding-bottom: 140px;
+            padding-bottom: 150px;
         }
 
         .app-logo-badge {
@@ -111,7 +111,6 @@
             font-size: 13px;
         }
 
-        /* صندوق خيارات الاستلام وعنوان التوصيل المعدل ليقبل الكتابة بطلاقة */
         .order-options-box {
             width: 100%;
             background: #fff;
@@ -121,8 +120,6 @@
             margin-top: 15px;
             text-align: right;
             border: 2px solid #ffedd5;
-            position: relative;
-            z-index: 10;
         }
         .order-options-box label {
             font-size: 13px;
@@ -153,25 +150,28 @@
             background: #fff7ed;
             color: #f97316;
         }
-        .location-input {
+        
+        /* حقل الكتابة الجديد والمضمون 100% للجوالات */
+        .location-textarea {
             width: 100%;
+            height: 70px;
             padding: 12px;
             border: 2px solid #fed7aa;
             border-radius: 8px;
             font-size: 14px;
+            font-family: inherit;
             outline: none;
             text-align: right;
             background-color: #fffaf5;
-            position: relative;
-            z-index: 20;
-            pointer-events: auto;
+            resize: none;
+            -webkit-user-select: text;
+            user-select: text;
         }
-        .location-input:focus {
+        .location-textarea:focus {
             border-color: #f97316;
             background-color: #fff;
         }
 
-        /* شريط السلة السفلي */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -212,7 +212,6 @@
     </div>
 
     <div class="main-content">
-        <!-- اللوقو -->
         <div class="app-logo-badge">
             <div class="tag-icon">🏷️</div>
             <div class="logo-text">سعرها</div>
@@ -221,12 +220,10 @@
         <h1>سعرها</h1>
         <p class="slogan">بالسعر الأصلي</p>
 
-        <!-- قائمة المنتجات -->
         <div id="products-container" style="width: 100%;">
             <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
         </div>
 
-        <!-- صندوق خيارات الاستلام وعنوان التوصيل القابل للكتابة -->
         <div class="order-options-box">
             <label>طريقة الاستلام:</label>
             <div class="type-selector">
@@ -235,11 +232,10 @@
             </div>
             
             <label style="color: #f97316;">📍 عنوان / موقع التوصيل:</label>
-            <input type="text" id="user-location" class="location-input" placeholder="اكتبي الحي، الشارع، أو أرفقي رابط موقعك هنا...">
+            <textarea id="user-location" class="location-textarea" placeholder="اكتبي الحي، الشارع، أو أرفقي رابط موقعك هنا..."></textarea>
         </div>
     </div>
 
-    <!-- شريط السلة السفلي -->
     <div class="cart-bar">
         <div>
             <span style="font-size: 12px; color: #666;">العناصر: <b id="cart-count">0</b></span><br>
