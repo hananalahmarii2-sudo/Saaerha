@@ -111,7 +111,7 @@
             font-size: 13px;
         }
 
-        /* صندوق خيارات الاستلام والتوصيل والعنوان البارز */
+        /* صندوق خيارات الاستلام وعنوان التوصيل الحر */
         .order-options-box {
             width: 100%;
             background: #fff;
@@ -166,7 +166,7 @@
             background-color: #fff;
         }
 
-        /* شريط السلة والسفلي */
+        /* شريط السلة السفلي */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -221,7 +221,7 @@
             <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
         </div>
 
-        <!-- صندوق خيارات الاستلام وعنوان التوصيل البارز -->
+        <!-- صندوق خيارات الاستلام وعنوان التوصيل الحر -->
         <div class="order-options-box">
             <label>طريقة الاستلام:</label>
             <div class="type-selector">
@@ -312,6 +312,7 @@
                 return;
             }
 
+            // قراءة العنوان بشكل اختياري حر بدون أي شروط تعجيزية تمنع الإرسال
             let locationText = document.getElementById('user-location').value.trim();
 
             let message = `أهلاً، أبي أطلب عن طريق سعرها:\n\n`;
