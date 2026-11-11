@@ -12,7 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="سعرها">
     
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #fdfdfd;
@@ -111,7 +111,7 @@
             font-size: 13px;
         }
 
-        /* صندوق خيارات الاستلام وعنوان التوصيل الحر */
+        /* صندوق خيارات الاستلام وعنوان التوصيل المعدل ليقبل الكتابة بطلاقة */
         .order-options-box {
             width: 100%;
             background: #fff;
@@ -121,6 +121,8 @@
             margin-top: 15px;
             text-align: right;
             border: 2px solid #ffedd5;
+            position: relative;
+            z-index: 10;
         }
         .order-options-box label {
             font-size: 13px;
@@ -160,6 +162,9 @@
             outline: none;
             text-align: right;
             background-color: #fffaf5;
+            position: relative;
+            z-index: 20;
+            pointer-events: auto;
         }
         .location-input:focus {
             border-color: #f97316;
@@ -221,7 +226,7 @@
             <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
         </div>
 
-        <!-- صندوق خيارات الاستلام وعنوان التوصيل الحر -->
+        <!-- صندوق خيارات الاستلام وعنوان التوصيل القابل للكتابة -->
         <div class="order-options-box">
             <label>طريقة الاستلام:</label>
             <div class="type-selector">
@@ -312,7 +317,6 @@
                 return;
             }
 
-            // قراءة العنوان بشكل اختياري حر بدون أي شروط تعجيزية تمنع الإرسال
             let locationText = document.getElementById('user-location').value.trim();
 
             let message = `أهلاً، أبي أطلب عن طريق سعرها:\n\n`;
