@@ -161,7 +161,7 @@
         <p class="slogan">بالسعر الأصلي</p>
 
         <div class="products-grid" id="products-list">
-            <!-- سيتم تعبئة المنتجات تلقائياً من الكود أدناه -->
+            <div style="color:#888; padding: 20px;">جاري جلب البيانات من قوقل شيت...</div>
         </div>
     </div>
 
@@ -177,36 +177,56 @@
     </div>
 
     <script>
-        // بيانات جدولك (مطابق لما في قوقل شيت تماماً)
-        const storeData = {
-            name: "مخابز زين",
-            number: "966502400234",
-            items: [
-                { name: "كرواسون", price: 12 },
-                { name: "قهوة", price: 6 },
-                { name: "ماكرون", price: 6 }
-            ]
-        };
+        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
+        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
 
         let cart = [];
+        let storeNumber = "";
 
-        function renderStore() {
-            const container = document.getElementById('products-list');
-            let html = `<div class="store-title">🏪 ${storeData.name}</div>`;
+        async function loadSheetData() {
+            try {
+                const res = await fetch(SHEET_URL);
+                const rows = await res.json();
+                
+                const container = document.getElementById('products-list');
+                container.innerHTML = '';
 
-            storeData.items.forEach((item) => {
-                html += `
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">${item.name}</div>
-                            <div class="product-price">${item.price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
-                        </div>
-                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة +</button>
-                    </div>
-                `;
-            });
+                if (!rows || rows.length === 0) {
+                    container.innerHTML = '<div style="color:red;">لا توجد بيانات في الشيت.</div>';
+                    return;
+                }
 
-            container.innerHTML = html;
+                rows.forEach(row => {
+                    if (!row.name) return;
+
+                    let num = (row.number || '').toString().trim();
+                    if (num.startsWith('5')) num = '966' + num;
+                    storeNumber = num;
+
+                    const categories = (row.category || '').split(',').map(s => s.trim());
+                    const prices = (row.price || '').split(',').map(s => s.trim());
+
+                    let html = `<div class="store-title">🏪 ${row.name}</div>`;
+
+                    categories.forEach((cat, index) => {
+                        const price = parseFloat(prices[index] || prices[0] || 0);
+                        html += `
+                            <div class="product-card">
+                                <div class="product-info">
+                                    <div class="product-name">${cat}</div>
+                                    <div class="product-price">${price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
+                                </div>
+                                <button class="add-btn" onclick="addToCart('${cat}', ${price})">إضافة +</button>
+                            </div>
+                        `;
+                    });
+
+                    container.innerHTML += html;
+                });
+            } catch (error) {
+                console.error(error);
+                document.getElementById('products-list').innerHTML = '<div style="color:red;">تعذر جلب البيانات. تأكدي أن الملف منشور للعامة (Public).</div>';
+            }
         }
 
         function addToCart(name, price) {
@@ -225,6 +245,10 @@
                 alert('الرجاء اختيار وجبة واحدة على الأقل قبل الإرسال!');
                 return;
             }
+            if (!storeNumber) {
+                alert('رقم الواتساب غير متوفر!');
+                return;
+            }
 
             let message = "مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n";
             cart.forEach((item, index) => {
@@ -233,14 +257,13 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             message += `\nالمجموع الكلي: ${total} ر.س`;
 
-            let url = `https://wa.me/${storeData.number}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
+            window.open(`https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // تشغيل عرض البيانات فور تحميل الصفحة
-        renderStore();
+        // تشغيل جلب البيانات عند فتح الصفحة
+        loadSheetData();
 
-        // إخفاء التنبيه إذا كان التطبيق مثبتاً ومفتوحاً كـ PWA
+        // إخفاء إشعار التثبيت إذا تم فتح التطبيق مستقلاً
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             if (isStandalone) {
