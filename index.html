@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سعرها - بالسعر الأصلي</title>
 
-    <!-- إعدادات الـ PWA والتغليف -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,9 +12,7 @@
     <meta name="apple-mobile-web-app-title" content="سعرها">
     
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #fdfdfd;
@@ -28,7 +25,6 @@
             min-height: 100vh;
         }
 
-        /* 1️⃣ شريط الإشعار العلوي الصغير */
         #app-install-banner {
             width: 100%;
             background-color: #f97316;
@@ -43,24 +39,9 @@
             top: 0;
             z-index: 9999;
         }
+        .banner-text { display: flex; align-items: center; gap: 8px; }
+        .btn-close { background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; opacity: 0.8; }
 
-        #app-install-banner .banner-text {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #app-install-banner button.btn-close {
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-size: 16px;
-            cursor: pointer;
-            opacity: 0.8;
-            padding: 0 4px;
-        }
-
-        /* 2️⃣ المحتوى الرئيسي */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -72,7 +53,7 @@
             padding-bottom: 90px;
         }
 
-        /* اللوقو الجديد المستوحى من فكرة التطبيق (بطاقة السعر والتوفير) */
+        /* اللوقو الأصيل المستوحى من فكرة بطاقة السعر والتوفير */
         .app-logo-badge {
             width: 110px;
             height: 110px;
@@ -85,33 +66,13 @@
             justify-content: center;
             color: white;
             margin-top: 10px;
-            position: relative;
             border: 2px solid #fff;
         }
+        .app-logo-badge .tag-icon { font-size: 32px; margin-bottom: 2px; }
+        .app-logo-badge .logo-text { font-size: 16px; font-weight: 900; letter-spacing: -0.5px; }
 
-        .app-logo-badge .tag-icon {
-            font-size: 32px;
-            margin-bottom: 2px;
-        }
-
-        .app-logo-badge .logo-text {
-            font-size: 16px;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-        }
-
-        h1 {
-            color: #f97316;
-            font-size: 26px;
-            margin: 12px 0 4px;
-        }
-
-        p.slogan {
-            color: #666;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 24px;
-        }
+        h1 { color: #f97316; font-size: 26px; margin: 12px 0 4px; }
+        p.slogan { color: #666; font-size: 14px; font-weight: bold; margin-bottom: 24px; }
 
         .store-title {
             width: 100%;
@@ -136,7 +97,6 @@
             border: 1px solid #f0f0f0;
             margin-bottom: 10px;
         }
-
         .product-info { text-align: right; }
         .product-name { font-weight: bold; font-size: 15px; color: #333; }
         .product-price { color: #f97316; font-size: 13px; font-weight: bold; margin-top: 4px; }
@@ -152,7 +112,6 @@
             font-size: 13px;
         }
 
-        /* شريط السلة والسفلي للطلب عبر الواتساب */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -168,7 +127,6 @@
             border-top-right-radius: 16px;
             z-index: 100;
         }
-
         .whatsapp-btn {
             background-color: #25d366;
             color: white;
@@ -186,7 +144,6 @@
 </head>
 <body>
 
-    <!-- الإشعار العلوي الصغير للتثبيت -->
     <div id="app-install-banner">
         <div class="banner-text">
             <span>📲 لتثبيت التطبيق: اضغط <b>مشاركة</b> ثم <b>إضافة للشاشة الرئيسية</b></span>
@@ -194,9 +151,8 @@
         <button class="btn-close" onclick="document.getElementById('app-install-banner').style.display='none'">✕</button>
     </div>
 
-    <!-- محتوى التطبيق الرئيسي -->
     <div class="main-content">
-        <!-- اللوقو المستوحى من فكرة التطبيق (السعر الأصلي) -->
+        <!-- اللوقو المستوحى من فكرة بطاقة السعر -->
         <div class="app-logo-badge">
             <div class="tag-icon">🏷️</div>
             <div class="logo-text">سعرها</div>
@@ -205,13 +161,11 @@
         <h1>سعرها</h1>
         <p class="slogan">بالسعر الأصلي</p>
 
-        <!-- قائمة المنتجات -->
         <div id="products-container" style="width: 100%;">
             <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
         </div>
     </div>
 
-    <!-- شريط السلة والطلب عبر الواتساب السفلي -->
     <div class="cart-bar">
         <div>
             <span style="font-size: 12px; color: #666;">العناصر: <b id="cart-count">0</b></span><br>
@@ -230,33 +184,27 @@
         let storeNumber = "966502400234";
 
         async function loadData() {
-            try {
-                const container = document.getElementById('products-container');
-                
-                // الوجبات المعتمدة
-                const items = [
-                    { name: "كرواسون", price: 12 },
-                    { name: "قهوة", price: 6 },
-                    { name: "ماكرون", price: 6 }
-                ];
+            const container = document.getElementById('products-container');
+            const items = [
+                { name: "كرواسون", price: 12 },
+                { name: "قهوة", price: 6 },
+                { name: "ماكرون", price: 6 }
+            ];
 
-                let html = `<div class="store-title">🏪 مخابز زين</div>`;
-                items.forEach(item => {
-                    html += `
-                        <div class="product-card">
-                            <div class="product-info">
-                                <div class="product-name">${item.name}</div>
-                                <div class="product-price">${item.price} ر.س</div>
-                            </div>
-                            <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة</button>
+            let html = `<div class="store-title">🏪 مخابز زين</div>`;
+            items.forEach(item => {
+                html += `
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">${item.name}</div>
+                            <div class="product-price">${item.price} ر.س</div>
                         </div>
-                    `;
-                });
+                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة</button>
+                    </div>
+                `;
+            });
 
-                container.innerHTML = html;
-            } catch (e) {
-                console.error(e);
-            }
+            container.innerHTML = html;
         }
 
         function addToCart(name, price) {
