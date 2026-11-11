@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سعرها - بالسعر الأصلي</title>
 
-    <!-- إعدادات التغليف (PWA) والهوية -->
+    <!-- إعدادات الـ PWA والتغليف -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,7 +26,7 @@
             min-height: 100vh;
         }
 
-        /* شريط الإشعار العلوي الصغير */
+        /* 1️⃣ شريط الإشعار العلوي الصغير للتثبيت */
         #app-install-banner {
             width: 100%;
             background-color: #f97316;
@@ -44,7 +44,7 @@
         .banner-text { display: flex; align-items: center; gap: 8px; }
         .btn-close { background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; opacity: 0.8; }
 
-        /* حاوية المحتوى الرئيسي */
+        /* 2️⃣ حاوية المحتوى الرئيسي */
         .container {
             width: 100%;
             max-width: 450px;
@@ -56,16 +56,27 @@
         }
 
         .logo-container img {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             object-fit: contain;
             border-radius: 24px;
             box-shadow: 0 10px 25px rgba(249, 115, 22, 0.2);
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         h1 { color: #f97316; font-size: 26px; margin: 10px 0 2px; }
         p.slogan { color: #666; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
+
+        .store-title {
+            width: 100%;
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
+            color: #f97316;
+            margin: 15px 0 10px;
+            border-bottom: 2px solid #fff0e6;
+            padding-bottom: 5px;
+        }
 
         /* قائمة المنتجات / الوجبات */
         .products-grid {
@@ -73,12 +84,12 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 80px;
+            margin-bottom: 90px;
         }
         .product-card {
             background: #fff;
             padding: 12px 16px;
-            border-radius: 12px;
+            border-radius: 14px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.04);
             display: flex;
             justify-content: space-between;
@@ -99,7 +110,7 @@
             font-size: 13px;
         }
 
-        /* شريط السلة العائم أسفل الشاشة */
+        /* شريط السلة السفلي للطلب */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -113,12 +124,13 @@
             align-items: center;
             border-top-left-radius: 16px;
             border-top-right-radius: 16px;
+            z-index: 100;
         }
         .whatsapp-btn {
             background-color: #25d366;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 10px;
             font-weight: bold;
             font-size: 14px;
@@ -131,7 +143,7 @@
 </head>
 <body>
 
-    <!-- 1. إشعار التثبيت العلوي -->
+    <!-- 1. إشعار التثبيت العلوي الصغير -->
     <div id="app-install-banner">
         <div class="banner-text">
             <span>📲 لتثبيت التطبيق: اضغط <b>مشاركة</b> ثم <b>إضافة للشاشة الرئيسية</b></span>
@@ -148,36 +160,15 @@
         <h1>سعرها</h1>
         <p class="slogan">بالسعر الأصلي</p>
 
-        <!-- قائمة الوجبات (يمكنك ربطها لاحقاً بـ Google Sheets) -->
         <div class="products-grid" id="products-list">
-            <div class="product-card">
-                <div class="product-info">
-                    <div class="product-name">وجبة برجر دجاج كلاسيك</div>
-                    <div class="product-price">18 ر.س</div>
-                </div>
-                <button class="add-btn" onclick="addToCart('وجبة برجر دجاج كلاسيك', 18)">إضافة</button>
-            </div>
-            <div class="product-card">
-                <div class="product-info">
-                    <div class="product-name">بطاطس مقرمشة</div>
-                    <div class="product-price">7 ر.س</div>
-                </div>
-                <button class="add-btn" onclick="addToCart('بطاطس مقرمشة', 7)">إضافة</button>
-            </div>
-            <div class="product-card">
-                <div class="product-info">
-                    <div class="product-name">عصير برتقال طازج</div>
-                    <div class="product-price">10 ر.س</div>
-                </div>
-                <button class="add-btn" onclick="addToCart('عصير برتقال طازج', 10)">إضافة</button>
-            </div>
+            <div style="color:#888; padding: 20px;">جاري جلب الوجبات والأسعار من قوقل شيت...</div>
         </div>
     </div>
 
     <!-- 3. شريط السلة والطلب عبر الواتساب السفلي -->
     <div class="cart-bar">
         <div>
-            <span style="font-size: 13px; color: #666;">العناصر المختارة: <b id="cart-count">0</b></span><br>
+            <span style="font-size: 12px; color: #666;">العناصر المختارة: <b id="cart-count">0</b></span><br>
             <span style="font-size: 15px; font-weight: bold; color: #f97316;" id="cart-total">0 ر.س</span>
         </div>
         <button class="whatsapp-btn" onclick="sendToWhatsApp()">
@@ -186,7 +177,54 @@
     </div>
 
     <script>
+        // رابط API قوقل شيت المباشر الخاص بمستندك
+        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
+        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/الورقة1`;
+
         let cart = [];
+        let storeNumber = ""; // سيتم تعبئته تلقائياً من قوقل شيت
+
+        async function fetchProductsFromSheet() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const data = await response.json();
+                
+                const container = document.getElementById('products-list');
+                container.innerHTML = '';
+
+                data.forEach(row => {
+                    if (!row.name) return;
+                    
+                    // حفظ رقم الواتساب (إضافة المفتاح الدولي بالسعودية 966 إذا كان الرقم يبدأ بـ 5)
+                    let num = (row.number || '').toString().trim();
+                    if (num.startsWith('5')) num = '966' + num;
+                    storeNumber = num;
+
+                    const categories = (row.category || '').split(',').map(s => s.trim());
+                    const prices = (row.price || '').split(',').map(s => s.trim());
+
+                    let html = `<div class="store-title">🏪 ${row.name}</div>`;
+
+                    categories.forEach((item, index) => {
+                        const price = prices[index] || prices[0] || '0';
+                        html += `
+                            <div class="product-card">
+                                <div class="product-info">
+                                    <div class="product-name">${item}</div>
+                                    <div class="product-price">${price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
+                                </div>
+                                <button class="add-btn" onclick="addToCart('${item}', ${parseFloat(price)})">إضافة +</button>
+                            </div>
+                        `;
+                    });
+
+                    container.innerHTML += html;
+                });
+            } catch (err) {
+                console.error(err);
+                document.getElementById('products-list').innerHTML = '<div style="color:red;">حدث خطأ في تحميل البيانات من قوقل شيت.</div>';
+            }
+        }
 
         function addToCart(name, price) {
             cart.push({ name, price });
@@ -204,10 +242,12 @@
                 alert('الرجاء اختيار وجبة واحدة على الأقل قبل الإرسال!');
                 return;
             }
-            
-            // استبدلي الرقم أدناه برقم الواتساب الخاص بكِ (مثال: 9665xxxxxxxx)
-            let phoneNumber = "966500000000"; 
-            
+
+            if (!storeNumber) {
+                alert('لم يتم العثور على رقم الواتساب للمتجر في قوقل شيت!');
+                return;
+            }
+
             let message = "مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n";
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - ${item.price} ر.س\n`;
@@ -215,11 +255,14 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             message += `\nالمجموع الكلي: ${total} ر.س`;
 
-            let url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            let url = `https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
 
-        // إخفاء إشعار التثبيت إذا كان التطبيق مفتوحاً كـ PWA
+        // تشغيل جلب البيانات فور تحميل الصفحة
+        fetchProductsFromSheet();
+
+        // إخفاء التنبيه إذا كان التطبيق مثبتاً ومفتوحاً كـ PWA
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             if (isStandalone) {
