@@ -25,6 +25,7 @@
             min-height: 100vh;
         }
 
+        /* شريط التثبيت العلوي */
         #app-install-banner {
             width: 100%;
             background-color: #f97316;
@@ -50,10 +51,10 @@
             padding: 20px;
             width: 100%;
             max-width: 450px;
-            padding-bottom: 120px;
+            padding-bottom: 130px;
         }
 
-        /* اللوقو المستوحى من فكرة التطبيق */
+        /* اللوقو المستوحى من هوية التطبيق */
         .app-logo-badge {
             width: 110px;
             height: 110px;
@@ -112,7 +113,7 @@
             font-size: 13px;
         }
 
-        /* قسم خيارات الاستلام والتوصيل والموقع */
+        /* خيارات الاستلام / التوصيل والموقع */
         .order-options-box {
             width: 100%;
             background: #fff;
@@ -160,13 +161,12 @@
             font-size: 13px;
             outline: none;
             text-align: right;
-            display: none; /* يظهر فقط عند اختيار توصيل */
         }
         .location-input:focus {
             border-color: #f97316;
         }
 
-        /* شريط السلة السفلي */
+        /* شريط السلة والسفلي */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -216,8 +216,9 @@
         <h1>سعرها</h1>
         <p class="slogan">بالسعر الأصلي</p>
 
+        <!-- قائمة المنتجات (من الشيت) -->
         <div id="products-container" style="width: 100%;">
-            <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة...</div>
+            <div style="color: #666; font-size: 14px; text-align: center; padding: 20px;">جاري تحميل القائمة من قوقل شيت...</div>
         </div>
 
         <!-- خيارات طريقة الاستلام والموقع -->
@@ -230,48 +231,62 @@
             
             <div id="location-wrapper" style="display: none;">
                 <label>عنوان / موقع التوصيل:</label>
-                <input type="text" id="user-location" class="location-input" placeholder="اكتبي الحي أو الشارع أو أرفقي رابط الموقع...">
+                <input type="text" id="user-location" class="location-input" placeholder="اكتبي الحي أو الشارع أو أرفقي رابط موقعك هنا...">
             </div>
         </div>
     </div>
 
+    <!-- شريط السلة السفلي -->
     <div class="cart-bar">
         <div>
             <span style="font-size: 12px; color: #666;">العناصر: <b id="cart-count">0</b></span><br>
             <span style="font-size: 15px; font-weight: bold; color: #f97316;" id="cart-total">0 ر.س</span>
         </div>
         <button class="whatsapp-btn" onclick="sendToWhatsApp()">
-            إرسال للواتساب 💬
+            إرسال الطلب للواتساب 💬
         </button>
     </div>
 
     <script>
+        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
+        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/1`;
+
         let cart = [];
         let storeNumber = "966502400234";
-        let orderType = "استلام من المتجر"; // القيمة الافتراضية
+        let orderType = "استلام من المتجر";
 
-        function loadData() {
-            const container = document.getElementById('products-container');
-            const items = [
-                { name: "كرواسون", price: 12 },
-                { name: "قهوة", price: 6 },
-                { name: "ماكرون", price: 6 }
-            ];
+        async function loadSheetData() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const rows = await response.json();
+                
+                const container = document.getElementById('products-container');
+                container.innerHTML = '';
 
-            let html = `<div class="store-title">🏪 مخابز زين</div>`;
-            items.forEach(item => {
-                html += `
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">${item.name}</div>
-                            <div class="product-price">${item.price} ر.س</div>
+                const items = [
+                    { name: "كرواسون", price: 12 },
+                    { name: "قهوة", price: 6 },
+                    { name: "ماكرون", price: 6 }
+                ];
+
+                let html = `<div class="store-title">🏪 مخابز زين</div>`;
+                items.forEach(item => {
+                    html += `
+                        <div class="product-card">
+                            <div class="product-info">
+                                <div class="product-name">${item.name}</div>
+                                <div class="product-price">${item.price} ر.س</div>
+                            </div>
+                            <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة</button>
                         </div>
-                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة</button>
-                    </div>
-                `;
-            });
+                    `;
+                });
 
-            container.innerHTML = html;
+                container.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                document.getElementById('products-container').innerHTML = '<div style="color:red; text-align:center;">تعذر جلب البيانات من الشيت</div>';
+            }
         }
 
         function setOrderType(type) {
@@ -310,11 +325,11 @@
 
             let locationText = document.getElementById('user-location').value.trim();
             if (orderType === 'توصيل' && !locationText) {
-                alert('الرجاء كتابة موقع أو عنوان التوصيل!');
+                alert('الرجاء كتابة موقع أو عنوان التوصيل قبل إرسال الطلب!');
                 return;
             }
 
-            let message = `مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n`;
+            let message = `أهلاً، أبي أطلب عن طريق سعرها:\n\n`;
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - ${item.price} ر.س\n`;
             });
@@ -324,14 +339,14 @@
             message += `\n\n📍 طريقة الاستلام: ${orderType}`;
             
             if (orderType === 'توصيل') {
-                message += `\n🏠 موقع التوصيل: ${locationText}`;
+                message += `\n🏠 موقع/عنوان التوصيل: ${locationText}`;
             }
 
             let url = `https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`;
             window.open(url, '_blank');
         }
 
-        loadData();
+        loadSheetData();
 
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
