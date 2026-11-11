@@ -60,7 +60,7 @@
             padding: 0 4px;
         }
 
-        /* 2️⃣ باقي محتوى الصفحة */
+        /* 2️⃣ المحتوى الرئيسي */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -72,25 +72,32 @@
             padding-bottom: 90px;
         }
 
-        /* حاوية اللوقو المضبوطة بدقة */
-        .logo-container {
+        /* اللوقو الجديد المستوحى من فكرة التطبيق (بطاقة السعر والتوفير) */
+        .app-logo-badge {
             width: 110px;
             height: 110px;
-            background: #fff;
-            border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.15);
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            border-radius: 28px;
+            box-shadow: 0 12px 25px rgba(249, 115, 22, 0.25);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            color: white;
             margin-top: 10px;
-            border: 1px solid #fce7db;
+            position: relative;
+            border: 2px solid #fff;
         }
 
-        .logo-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .app-logo-badge .tag-icon {
+            font-size: 32px;
+            margin-bottom: 2px;
+        }
+
+        .app-logo-badge .logo-text {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
         }
 
         h1 {
@@ -145,7 +152,7 @@
             font-size: 13px;
         }
 
-        /* شريط السلة السفلي للطلب عبر الواتساب */
+        /* شريط السلة والسفلي للطلب عبر الواتساب */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -189,9 +196,10 @@
 
     <!-- محتوى التطبيق الرئيسي -->
     <div class="main-content">
-        <div class="logo-container">
-            <!-- استبدلي رابط الصورة أدناه برابط الشعار الخاص بكِ لو رغبتِ -->
-            <img src="https://cdn-icons-png.flaticon.com/512/1069/1069102.png" alt="شعار سعرها">
+        <!-- اللوقو المستوحى من فكرة التطبيق (السعر الأصلي) -->
+        <div class="app-logo-badge">
+            <div class="tag-icon">🏷️</div>
+            <div class="logo-text">سعرها</div>
         </div>
 
         <h1>سعرها</h1>
@@ -225,7 +233,7 @@
             try {
                 const container = document.getElementById('products-container');
                 
-                // المنتجات والأسعار
+                // الوجبات المعتمدة
                 const items = [
                     { name: "كرواسون", price: 12 },
                     { name: "قهوة", price: 6 },
@@ -281,7 +289,6 @@
 
         loadData();
 
-        // إخفاء شريط الإشعار العلوي إذا تم فتح التطبيق كمثبت
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             if (isStandalone) {
