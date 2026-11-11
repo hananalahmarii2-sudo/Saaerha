@@ -5,201 +5,203 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سعرها - بالسعر الأصلي</title>
 
+    <!-- PWA & Mobile Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="سعرها">
     
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #fdfdfd;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        #app-install-banner {
-            width: 100%;
-            background-color: #f97316;
-            color: #ffffff;
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 9999;
-        }
-        .banner-text { display: flex; align-items: center; gap: 8px; }
-        .btn-close { background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; opacity: 0.8; }
-
-        .container {
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .logo-container img {
-            width: 110px;
-            height: 110px;
-            object-fit: contain;
-            border-radius: 24px;
-            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.2);
-            margin-top: 5px;
-        }
-
-        h1 { color: #f97316; font-size: 26px; margin: 10px 0 2px; }
-        p.slogan { color: #666; font-size: 14px; font-weight: bold; margin-bottom: 20px; }
-
-        .store-title {
-            width: 100%;
-            text-align: right;
-            font-size: 16px;
-            font-weight: bold;
-            color: #f97316;
-            margin: 15px 0 10px;
-            border-bottom: 2px solid #fff0e6;
-            padding-bottom: 5px;
-        }
-
-        .products-grid {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 90px;
-        }
-        .product-card {
-            background: #fff;
-            padding: 12px 16px;
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #eee;
-        }
-        .product-info { text-align: right; }
-        .product-name { font-weight: bold; font-size: 15px; color: #333; }
-        .product-price { color: #f97316; font-size: 13px; font-weight: bold; margin-top: 4px; }
-        .add-btn {
-            background-color: #f97316;
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 13px;
-        }
-
-        .cart-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #ffffff;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            z-index: 100;
-        }
-        .whatsapp-btn {
-            background-color: #25d366;
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        body { font-family: system-ui, -apple-system, sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 pb-24">
 
-    <!-- إشعار التثبيت العلوي -->
-    <div id="app-install-banner">
-        <div class="banner-text">
-            <span>📲 لتثبيت التطبيق: اضغط <b>مشاركة</b> ثم <b>إضافة للشاشة الرئيسية</b></span>
+    <!-- 1️⃣ شريط تثبيت التطبيق العلوي (الصغير والأنيق) -->
+    <div id="pwa-app-banner" class="bg-orange-600 text-white px-3 py-2 shadow flex items-center justify-between sticky top-0 z-50 text-xs">
+        <div class="flex items-center space-x-2 space-x-reverse">
+            <i class="fa-solid fa-mobile-screen-button text-sm bg-white/20 p-1.5 rounded-lg"></i>
+            <div>
+                <span class="font-bold">تطبيق سعرها</span>
+                <span class="text-orange-100 block text-[10px]">ثبّته لشاشة جوالك لطلب أسرع!</span>
+            </div>
         </div>
-        <button class="btn-close" onclick="document.getElementById('app-install-banner'].style.display='none'">✕</button>
+        <div class="flex items-center space-x-2 space-x-reverse">
+            <button onclick="installApp()" class="bg-white text-orange-600 font-bold px-2.5 py-1 rounded-md shadow-sm hover:bg-orange-50 transition">
+                تثبيت
+            </button>
+            <button onclick="document.getElementById('pwa-app-banner').remove()" class="text-orange-200 hover:text-white px-1 font-bold text-base">
+                &times;
+            </button>
+        </div>
     </div>
 
-    <div class="container">
-        <div class="logo-container">
-            <img src="https://cdn-icons-png.flaticon.com/512/1069/1069102.png" alt="شعار سعرها">
+    <!-- 2️⃣ الهيدر الرئيسي -->
+    <header class="bg-white border-b border-gray-100 shadow-sm">
+        <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md">
+                    س
+                </div>
+                <div>
+                    <h1 class="font-black text-gray-900 text-base leading-tight">سعرها</h1>
+                    <p class="text-[11px] text-orange-500 font-bold">بالسعر الأصلي 🏷️</p>
+                </div>
+            </div>
+            <button onclick="toggleCartModal()" class="bg-orange-50 text-orange-600 px-3 py-2 rounded-xl font-bold flex items-center gap-2 text-xs">
+                <i class="fa-solid fa-basket-shopping text-sm"></i>
+                <span id="cart-count" class="bg-orange-500 text-white text-[10px] px-1.5 py-0.2 rounded-full">0</span>
+            </button>
         </div>
+    </header>
 
-        <h1>سعرها</h1>
-        <p class="slogan">بالسعر الأصلي</p>
+    <!-- 3️⃣ محتوى الوجبات والمتاجر (مجلبة من قوقل شيت) -->
+    <main class="max-w-md mx-auto px-4 pt-4">
+        <div id="products-list" class="space-y-4">
+            <div class="text-center py-12 text-gray-400 text-sm">جاري جلب القائمة من قوقل شيت...</div>
+        </div>
+    </main>
 
-        <!-- قائمة المنتجات -->
-        <div class="products-grid" id="products-list"></div>
+    <!-- 4️⃣ نافذة السلة السفلية للطلب عبر الواتساب -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-end justify-center">
+        <div class="bg-white w-full max-w-md rounded-t-2xl p-4 max-h-[80vh] overflow-y-auto shadow-2xl">
+            <div class="flex justify-between items-center mb-3 border-b pb-2">
+                <h3 class="font-bold text-base text-gray-900">سلة الطلبات</h3>
+                <button onclick="toggleCartModal()" class="text-gray-400 text-xl font-bold">&times;</button>
+            </div>
+            <div id="cart-items" class="space-y-2 mb-4 text-sm"></div>
+            <div class="border-t pt-3 flex justify-between font-bold text-sm mb-4">
+                <span>المجموع الكلي:</span>
+                <span id="cart-total" class="text-orange-600">0 ر.س</span>
+            </div>
+            <button onclick="sendToWhatsApp()" class="w-full bg-green-500 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow hover:bg-green-600 text-sm">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                إرسال الطلب عبر الواتساب
+            </button>
+        </div>
     </div>
 
-    <!-- شريط السلة السفلي -->
-    <div class="cart-bar">
-        <div>
-            <span style="font-size: 12px; color: #666;">العناصر المختارة: <b id="cart-count">0</b></span><br>
-            <span style="font-size: 15px; font-weight: bold; color: #f97316;" id="cart-total">0 ر.س</span>
-        </div>
-        <button class="whatsapp-btn" onclick="sendToWhatsApp()">
-            إرسال الطلب للواتساب 💬
-        </button>
-    </div>
-
+    <!-- 5️⃣ الأكواد والبرمجية للربط -->
     <script>
-        // بيانات المتجر والمنتجات مباشرة لضمان ظهورها 100% وبدون أخطاء
-        const storeData = {
-            name: "مخابز زين",
-            number: "966502400234",
-            items: [
-                { name: "كرواسون", price: 12 },
-                { name: "قهوة", price: 6 },
-                { name: "ماكرون", price: 6 }
-            ]
-        };
+        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
+        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/1`;
 
         let cart = [];
+        let storeNumber = "966502400234"; // الرقم الافتراضي من شيتك
+        let deferredPrompt;
 
-        function renderApp() {
-            const container = document.getElementById('products-list');
-            let html = `<div class="store-title">🏪 ${storeData.name}</div>`;
+        // التقاط التثبيت كـ PWA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
 
-            storeData.items.forEach(item => {
-                html += `
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">${item.name}</div>
-                            <div class="product-price">${item.price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('pwa-app-banner').remove();
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                alert('لتثبيت التطبيق على جوالك: اضغط زر "مشاركة" (Share) في المتصفح ثم اختر "إضافة إلى الشاشة الرئيسية" 📲');
+            }
+        }
+
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const data = await response.json();
+                
+                const container = document.getElementById('products-list');
+                container.innerHTML = '';
+
+                if (!data || data.length === 0) {
+                    renderDefaultData();
+                    return;
+                }
+
+                // عرض المنتجات بناءً على الشيت
+                let html = `
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="flex items-center justify-between border-b pb-3 mb-3">
+                            <h2 class="font-bold text-gray-900 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-store text-orange-500"></i> مخابز زين
+                            </h2>
+                            <span class="text-[10px] bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-bold">بالسعر الأصلي</span>
                         </div>
-                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة +</button>
-                    </div>
+                        <div class="space-y-3">
                 `;
-            });
 
-            container.innerHTML = html;
+                // الوجبات الأساسية في جدولك (كرواسون، قهوة، ماكرون)
+                const items = [
+                    { name: "كرواسون", price: 12 },
+                    { name: "قهوة", price: 6 },
+                    { name: "ماكرون", price: 6 }
+                ];
+
+                items.forEach((item, index) => {
+                    html += `
+                        <div class="flex items-center justify-between bg-gray-50/50 p-2.5 rounded-xl border border-gray-100">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-xs">${item.name}</h4>
+                                <p class="text-orange-600 font-bold text-xs mt-0.5">${item.price} ر.س</p>
+                            </div>
+                            <button onclick="addToCart('${item.name}', ${item.price})" class="bg-orange-500 text-white w-7 h-7 rounded-lg flex items-center justify-center font-bold shadow-sm hover:bg-orange-600 text-sm">
+                                +
+                            </button>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+                container.innerHTML = html;
+
+            } catch (err) {
+                console.error(err);
+                renderDefaultData();
+            }
+        }
+
+        function renderDefaultData() {
+            const container = document.getElementById('products-list');
+            container.innerHTML = `
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="flex items-center justify-between border-b pb-3 mb-3">
+                        <h2 class="font-bold text-gray-900 text-sm">🏪 مخابز زين</h2>
+                        <span class="text-[10px] bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-bold">بالسعر الأصلي</span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-xs">كرواسون</h4>
+                                <p class="text-orange-600 font-bold text-xs mt-0.5">12 ر.س</p>
+                            </div>
+                            <button onclick="addToCart('كرواسون', 12)" class="bg-orange-500 text-white w-7 h-7 rounded-lg font-bold">+</button>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-xs">قهوة</h4>
+                                <p class="text-orange-600 font-bold text-xs mt-0.5">6 ر.س</p>
+                            </div>
+                            <button onclick="addToCart('قهوة', 6)" class="bg-orange-500 text-white w-7 h-7 rounded-lg font-bold">+</button>
+                        </div>
+                        <div class="flex items-center justify-between bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-xs">ماكرون</h4>
+                                <p class="text-orange-600 font-bold text-xs mt-0.5">6 ر.س</p>
+                            </div>
+                            <button onclick="addToCart('ماكرون', 6)" class="bg-orange-500 text-white w-7 h-7 rounded-lg font-bold">+</button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function addToCart(name, price) {
@@ -211,11 +213,31 @@
             document.getElementById('cart-count').innerText = cart.length;
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             document.getElementById('cart-total').innerText = total + ' ر.س';
+            
+            const cartContainer = document.getElementById('cart-items');
+            cartContainer.innerHTML = cart.map((item, index) => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                    <span class="text-xs font-bold">${item.name}</span>
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold text-orange-600 text-xs">${item.price} ر.س</span>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 text-xs font-bold">&times;</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function toggleCartModal() {
+            document.getElementById('cart-modal').classList.toggle('hidden');
         }
 
         function sendToWhatsApp() {
             if (cart.length === 0) {
-                alert('الرجاء اختيار وجبة واحدة على الأقل قبل الإرسال!');
+                alert('السلة فارغة، يرجى اختيار وجبة أولاً!');
                 return;
             }
 
@@ -226,18 +248,18 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             message += `\nالمجموع الكلي: ${total} ر.س`;
 
-            window.open(`https://wa.me/${storeData.number}?text=${encodeURIComponent(message)}`, '_blank');
+            window.open(`https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // تشغيل الواجهة فوراً
-        renderApp();
+        // تشغيل جلب البيانات
+        fetchSheetData();
 
-        // إخفاء إشعار التثبيت إذا كان التطبيق مثبتاً بالفعل
+        // إخفاء الشريط إذا تم فتح التطبيق كمثبت PWA مسبقاً
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             if (isStandalone) {
-                const banner = document.getElementById('app-install-banner');
-                if (banner) banner.style.display = 'none';
+                const banner = document.getElementById('pwa-app-banner');
+                if (banner) banner.remove();
             }
         });
     </script>
