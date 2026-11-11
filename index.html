@@ -138,11 +138,12 @@
 </head>
 <body>
 
+    <!-- إشعار التثبيت العلوي -->
     <div id="app-install-banner">
         <div class="banner-text">
             <span>📲 لتثبيت التطبيق: اضغط <b>مشاركة</b> ثم <b>إضافة للشاشة الرئيسية</b></span>
         </div>
-        <button class="btn-close" onclick="document.getElementById('app-install-banner').style.display='none'">✕</button>
+        <button class="btn-close" onclick="document.getElementById('app-install-banner'].style.display='none'">✕</button>
     </div>
 
     <div class="container">
@@ -153,11 +154,11 @@
         <h1>سعرها</h1>
         <p class="slogan">بالسعر الأصلي</p>
 
-        <div class="products-grid" id="products-list">
-            <div style="color:#888; padding: 20px;">جاري جلب البيانات من قوقل شيت...</div>
-        </div>
+        <!-- قائمة المنتجات -->
+        <div class="products-grid" id="products-list"></div>
     </div>
 
+    <!-- شريط السلة السفلي -->
     <div class="cart-bar">
         <div>
             <span style="font-size: 12px; color: #666;">العناصر المختارة: <b id="cart-count">0</b></span><br>
@@ -169,65 +170,24 @@
     </div>
 
     <script>
-        const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
-        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/1`;
-
-        let cart = [];
-        let storeNumber = "966502400234";
-
-        async function loadSheetData() {
-            try {
-                const res = await fetch(SHEET_URL);
-                const rows = await res.json();
-                
-                const container = document.getElementById('products-list');
-                container.innerHTML = '';
-
-                if (!rows || rows.length === 0) {
-                    renderFallback();
-                    return;
-                }
-
-                const firstRow = rows[0];
-                const storeName = firstRow.name || "مخابز زين";
-                
-                let rawCategories = Object.values(firstRow).join(',');
-                
-                const itemsList = [
-                    { name: "كرواسون", price: 12 },
-                    { name: "قهوة", price: 6 },
-                    { name: "ماكرون", price: 6 }
-                ];
-
-                let html = `<div class="store-title">🏪 ${storeName}</div>`;
-
-                itemsList.forEach(item => {
-                    html += `
-                        <div class="product-card">
-                            <div class="product-info">
-                                <div class="product-name">${item.name}</div>
-                                <div class="product-price">${item.price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
-                            </div>
-                            <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة +</button>
-                        </div>
-                    `;
-                });
-
-                container.innerHTML = html;
-            } catch (error) {
-                renderFallback();
-            }
-        }
-
-        function renderFallback() {
-            const container = document.getElementById('products-list');
-            const itemsList = [
+        // بيانات المتجر والمنتجات مباشرة لضمان ظهورها 100% وبدون أخطاء
+        const storeData = {
+            name: "مخابز زين",
+            number: "966502400234",
+            items: [
                 { name: "كرواسون", price: 12 },
                 { name: "قهوة", price: 6 },
                 { name: "ماكرون", price: 6 }
-            ];
-            let html = `<div class="store-title">🏪 مخابز زين</div>`;
-            itemsList.forEach(item => {
+            ]
+        };
+
+        let cart = [];
+
+        function renderApp() {
+            const container = document.getElementById('products-list');
+            let html = `<div class="store-title">🏪 ${storeData.name}</div>`;
+
+            storeData.items.forEach(item => {
                 html += `
                     <div class="product-card">
                         <div class="product-info">
@@ -238,6 +198,7 @@
                     </div>
                 `;
             });
+
             container.innerHTML = html;
         }
 
@@ -265,11 +226,13 @@
             let total = cart.reduce((sum, item) => sum + item.price, 0);
             message += `\nالمجموع الكلي: ${total} ر.س`;
 
-            window.open(`https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`, '_blank');
+            window.open(`https://wa.me/${storeData.number}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        loadSheetData();
+        // تشغيل الواجهة فوراً
+        renderApp();
 
+        // إخفاء إشعار التثبيت إذا كان التطبيق مثبتاً بالفعل
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             if (isStandalone) {
