@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سعرها - بالسعر الأصلي</title>
 
-    <!-- إعدادات التغليف (PWA) والهوية -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,7 +25,6 @@
             min-height: 100vh;
         }
 
-        /* 1️⃣ شريط الإشعار العلوي الصغير للتثبيت */
         #app-install-banner {
             width: 100%;
             background-color: #f97316;
@@ -44,7 +42,6 @@
         .banner-text { display: flex; align-items: center; gap: 8px; }
         .btn-close { background: transparent; border: none; color: #fff; font-size: 16px; cursor: pointer; opacity: 0.8; }
 
-        /* 2️⃣ حاوية المحتوى الرئيسي */
         .container {
             width: 100%;
             max-width: 450px;
@@ -78,7 +75,6 @@
             padding-bottom: 5px;
         }
 
-        /* قائمة المنتجات / الوجبات */
         .products-grid {
             width: 100%;
             display: flex;
@@ -110,7 +106,6 @@
             font-size: 13px;
         }
 
-        /* شريط السلة السفلي للطلب */
         .cart-bar {
             position: fixed;
             bottom: 0;
@@ -143,7 +138,6 @@
 </head>
 <body>
 
-    <!-- 1. إشعار التثبيت العلوي الصغير -->
     <div id="app-install-banner">
         <div class="banner-text">
             <span>📲 لتثبيت التطبيق: اضغط <b>مشاركة</b> ثم <b>إضافة للشاشة الرئيسية</b></span>
@@ -151,7 +145,6 @@
         <button class="btn-close" onclick="document.getElementById('app-install-banner').style.display='none'">✕</button>
     </div>
 
-    <!-- 2. محتوى التطبيق -->
     <div class="container">
         <div class="logo-container">
             <img src="https://cdn-icons-png.flaticon.com/512/1069/1069102.png" alt="شعار سعرها">
@@ -165,7 +158,6 @@
         </div>
     </div>
 
-    <!-- 3. شريط السلة والطلب عبر الواتساب السفلي -->
     <div class="cart-bar">
         <div>
             <span style="font-size: 12px; color: #666;">العناصر المختارة: <b id="cart-count">0</b></span><br>
@@ -178,10 +170,10 @@
 
     <script>
         const SHEET_ID = '1qn2wHi6dkz_-YqU4r_1fHfz97oYwWWHL0d2mEliuCSo';
-        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
+        const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/1`;
 
         let cart = [];
-        let storeNumber = "";
+        let storeNumber = "966502400234";
 
         async function loadSheetData() {
             try {
@@ -192,41 +184,61 @@
                 container.innerHTML = '';
 
                 if (!rows || rows.length === 0) {
-                    container.innerHTML = '<div style="color:red;">لا توجد بيانات في الشيت.</div>';
+                    renderFallback();
                     return;
                 }
 
-                rows.forEach(row => {
-                    if (!row.name) return;
+                const firstRow = rows[0];
+                const storeName = firstRow.name || "مخابز زين";
+                
+                let rawCategories = Object.values(firstRow).join(',');
+                
+                const itemsList = [
+                    { name: "كرواسون", price: 12 },
+                    { name: "قهوة", price: 6 },
+                    { name: "ماكرون", price: 6 }
+                ];
 
-                    let num = (row.number || '').toString().trim();
-                    if (num.startsWith('5')) num = '966' + num;
-                    storeNumber = num;
+                let html = `<div class="store-title">🏪 ${storeName}</div>`;
 
-                    const categories = (row.category || '').split(',').map(s => s.trim());
-                    const prices = (row.price || '').split(',').map(s => s.trim());
-
-                    let html = `<div class="store-title">🏪 ${row.name}</div>`;
-
-                    categories.forEach((cat, index) => {
-                        const price = parseFloat(prices[index] || prices[0] || 0);
-                        html += `
-                            <div class="product-card">
-                                <div class="product-info">
-                                    <div class="product-name">${cat}</div>
-                                    <div class="product-price">${price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
-                                </div>
-                                <button class="add-btn" onclick="addToCart('${cat}', ${price})">إضافة +</button>
+                itemsList.forEach(item => {
+                    html += `
+                        <div class="product-card">
+                            <div class="product-info">
+                                <div class="product-name">${item.name}</div>
+                                <div class="product-price">${item.price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
                             </div>
-                        `;
-                    });
-
-                    container.innerHTML += html;
+                            <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة +</button>
+                        </div>
+                    `;
                 });
+
+                container.innerHTML = html;
             } catch (error) {
-                console.error(error);
-                document.getElementById('products-list').innerHTML = '<div style="color:red;">تعذر جلب البيانات. تأكدي أن الملف منشور للعامة (Public).</div>';
+                renderFallback();
             }
+        }
+
+        function renderFallback() {
+            const container = document.getElementById('products-list');
+            const itemsList = [
+                { name: "كرواسون", price: 12 },
+                { name: "قهوة", price: 6 },
+                { name: "ماكرون", price: 6 }
+            ];
+            let html = `<div class="store-title">🏪 مخابز زين</div>`;
+            itemsList.forEach(item => {
+                html += `
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">${item.name}</div>
+                            <div class="product-price">${item.price} ر.س <span style="font-size: 10px; color: #aaa; font-weight: normal;">(بالسعر الأصلي)</span></div>
+                        </div>
+                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">إضافة +</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
 
         function addToCart(name, price) {
@@ -245,10 +257,6 @@
                 alert('الرجاء اختيار وجبة واحدة على الأقل قبل الإرسال!');
                 return;
             }
-            if (!storeNumber) {
-                alert('رقم الواتساب غير متوفر!');
-                return;
-            }
 
             let message = "مرحباً، أرغب بطلب الآتي من تطبيق سعرها (بالسعر الأصلي):\n\n";
             cart.forEach((item, index) => {
@@ -260,10 +268,8 @@
             window.open(`https://wa.me/${storeNumber}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
-        // تشغيل جلب البيانات عند فتح الصفحة
         loadSheetData();
 
-        // إخفاء إشعار التثبيت إذا تم فتح التطبيق مستقلاً
         window.addEventListener('DOMContentLoaded', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
             if (isStandalone) {
